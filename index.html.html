@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <script src="https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js"></script>
+  </head>
+  <body>
+    <input type="file" id="uploader">
+    <img id="uploadedImg"/>
+    <p id="output"></p>
+    <p id="completeData"></p>
+    <script>
+      const recognize = async ({ target: { files }  }) => {
+        document.getElementById("uploadedImg").src = window.URL.createObjectURL(files[0]) 
+        const data = await Tesseract.recognize(files[0], 'eng', {
+          logger: m => console.log(m),
+        });
+        console.log(data.text);
+        console.log(data)
+        document.getElementById("output").innerText = data.text
+        const {confidence,text,version} = data;
+        const parsedData = {confidence,text,version};
+        document.getElementById("completeData").innerText = JSON.stringify(parsedData,null,4)
+      }
+      const elm = document.getElementById('uploader');
+      elm.addEventListener('change', recognize);
+    </script>
+  </body>
+</html>
